@@ -130,3 +130,48 @@ echo "* soft nofile 65536" >> /etc/security/limits.conf
 
 example： 从root用户切su elk之后，工作目录还是root，及环境变量什么的都是root的
 
+
+
+### 接下来安装es的可视化插件elasticsearch-head
+
+- Git clone git://github.com/mobz/elasticsearch-head.git
+- cd elasticsearch-head
+- npm install -g  # 使用cnpm install和npm install都失败，最后加了-g成功
+- npm run start
+
+启动成功：
+
+![image-20191230160437016](/img/elasticsearch/image-20191230160437016.png)
+
+![image-20191230160659274](/img/elasticsearch/image-20191230160659274.png)
+
+
+
+---
+
+error：发现集群一直是未连接
+
+---
+
+![image-20191230162518785](/img/elasticsearch/image-20191230162518785.png)
+
+solutions：9100连9200存在跨域问题，需要配置跨域信息。
+
+echo "http.cors.enabled: true" >> elasticsearch.yml
+
+echo "http.cors.allow-origin: \\"*\\"" >> elasticsearch.yml
+
+然后重启es，成功。
+
+![image-20191230162854476](/img/elasticsearch/image-20191230162854476.png)
+
+
+
+ curl -X PUT "localhost:9200/weather" 测试通关，能在页面显示如图。
+
+
+
+##### 备注
+
++ 6.x后es要用户名密码，需要加些配置，es-head才能连上es
++ 5.x后es不推荐head随es一起启动，不希望装在plugin下，建议新建目录，git下载，单独启动
